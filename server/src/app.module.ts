@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TrpcModule } from './trpc/trpc.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import { TrpcModule } from './trpc/trpc.module';
       cache: true,
     }),
     TrpcModule,
+    PrismaModule,
   ],
 })
 export class AppModule {}
