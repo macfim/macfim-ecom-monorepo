@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { TypedConfigModule, fileLoader } from 'nest-typed-config';
-import { Config } from './config';
+import { ConfigModule } from '@nestjs/config';
+import { TrpcModule } from './trpc/trpc.module';
 
 @Module({
   imports: [
-    TypedConfigModule.forRoot({
+    ConfigModule.forRoot({
       isGlobal: true,
-      schema: Config,
-      load: fileLoader(),
+      cache: true,
     }),
+    TrpcModule,
   ],
 })
 export class AppModule {}
