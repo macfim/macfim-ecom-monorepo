@@ -1,4 +1,4 @@
-import { trpc } from "@frontend/app/trpc";
+import { trpc } from "../app/trpc";
 
 export default async function Home() {
   const { greeting } = await trpc.hello.query({ name: `Tom` });

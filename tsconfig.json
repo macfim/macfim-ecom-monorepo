@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "sourceMap": true,
     "strict": true,
     "baseUrl": ".",
     "experimentalDecorators": true,
@@ -11,9 +14,10 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
     "paths": {
-      "@server/*": ["./server/src/*"],
-      "@frontend/*": ["./frontend/*"]
+      "@server/*": ["server/src/*"],
+      "@client/*": ["client/*"]
     }
   }
 }

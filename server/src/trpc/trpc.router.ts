@@ -1,6 +1,6 @@
 import { INestApplication, Injectable } from '@nestjs/common';
 import { z } from 'zod';
-import { TrpcService } from '@server/trpc/trpc.service';
+import { TrpcService } from 'server/src/trpc/trpc.service';
 import * as trpcExpress from '@trpc/server/adapters/express';
 
 @Injectable()
