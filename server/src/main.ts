@@ -2,11 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { TrpcRouter } from './trpc/trpc.router';
 import { Logger } from '@nestjs/common';
-
-const PORT = process.env.PORT || 4000;
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const configService = app.get(ConfigService);
+  const PORT = configService.get('PORT') as number;
 
   app.enableCors();
 
@@ -17,5 +19,4 @@ async function bootstrap() {
 
   await app.listen(PORT);
 }
-
 bootstrap();
