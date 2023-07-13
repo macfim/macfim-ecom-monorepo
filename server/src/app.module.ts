@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 
-import { TrpcModule } from './trpc/trpc.module';
-import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { TrpcModule } from './trpc/trpc.module';
 import { UsersModule } from './users/users.module';
 
 const configValidationSchema = Joi.object({

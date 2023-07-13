@@ -3,14 +3,14 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
+import type { Role, User } from '@prisma/client';
+import type { CreateUserDto } from '@server/users/dto';
+import * as argon2 from 'argon2';
 import { UsersService } from '../users/users.service';
 
-import * as argon2 from 'argon2';
-import { JwtService } from '@nestjs/jwt';
-import { Role, User } from '@prisma/client';
-import { CreateUserDto } from '@server/users/dto';
-import { ConfigService } from '@nestjs/config';
-import { AuthDto } from './dto';
+import type { AuthDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -47,7 +47,7 @@ export class AuthService {
     return tokens;
   }
 
-  async logout(userId: string) {
+  logout(userId: string) {
     return this.usersService.updateRefreshToken(userId, null);
   }
 
