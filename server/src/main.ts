@@ -17,6 +17,8 @@ async function bootstrap() {
 
   Logger.log(`Server running on http://localhost:${PORT}`, 'Bootstrap');
 
+  app.setGlobalPrefix('api');
+
   await app.listen(PORT);
 }
 bootstrap();
