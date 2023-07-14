@@ -10,8 +10,8 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  async findOneById(userId: User['id']) {
-    return await this.prisma.user.findUnique({ where: { id: userId } });
+  findOneById(userId: User['id']) {
+    return this.prisma.user.findUnique({ where: { id: userId } });
   }
 
   create(data: Prisma.UserCreateArgs['data']) {
