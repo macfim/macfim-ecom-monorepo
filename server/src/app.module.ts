@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
+import { LoggerModule } from 'nestjs-pino';
 
 import { PrismaModule } from './models/prisma/prisma.module';
 import { UsersModule } from './models/users/users.module';
@@ -24,6 +25,19 @@ const configValidationSchema = Joi.object({
       isGlobal: true,
       cache: true,
       validationSchema: configValidationSchema,
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        customProps: () => ({
+          context: 'HTTP',
+        }),
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            singleLine: true,
+          },
+        },
+      },
     }),
     PrismaModule,
     AuthModule,
