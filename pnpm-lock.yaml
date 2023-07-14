@@ -76,9 +76,6 @@ importers:
       '@prisma/client':
         specifier: ^5.0.0
         version: 5.0.0(prisma@5.0.0)
-      '@trpc/server':
-        specifier: ^10.34.0
-        version: 10.34.0
       argon2:
         specifier: ^0.30.3
         version: 0.30.3

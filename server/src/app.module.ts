@@ -2,11 +2,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import Joi from 'joi';
 
-import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { TrpcModule } from './trpc/trpc.module';
-import { UsersModule } from './users/users.module';
+import { PrismaModule } from './models/prisma/prisma.module';
+import { UsersModule } from './models/users/users.module';
 import { APP_GUARD } from '@nestjs/core';
+import { AuthModule } from './models/auth/auth.module';
 import { AccessTokenGuard } from './shared/guards';
 
 const configValidationSchema = Joi.object({
@@ -26,7 +25,6 @@ const configValidationSchema = Joi.object({
       cache: true,
       validationSchema: configValidationSchema,
     }),
-    TrpcModule,
     PrismaModule,
     AuthModule,
     UsersModule,

@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { CreateUserDto } from '@server/users/dto';
+import { CreateUserDto } from '@server/models/users/dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
 import type { JwtPayload } from './types';

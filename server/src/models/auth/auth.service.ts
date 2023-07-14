@@ -6,7 +6,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import type { Role, User } from '@prisma/client';
-import type { CreateUserDto } from '@server/users/dto';
+import type { CreateUserDto } from '@server/models/users/dto';
 import * as argon2 from 'argon2';
 import { UsersService } from '../users/users.service';
 
