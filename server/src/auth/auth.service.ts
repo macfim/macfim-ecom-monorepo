@@ -11,6 +11,7 @@ import * as argon2 from 'argon2';
 import { UsersService } from '../users/users.service';
 
 import type { AuthDto } from './dto';
+import type { JwtPayload } from './types';
 
 @Injectable()
 export class AuthService {
@@ -30,14 +31,12 @@ export class AuthService {
     return null;
   }
 
-  async login({ email, password }: AuthDto) {
+  async loginLocal({ email, password }: AuthDto) {
     const user = await this.usersService.findOneByEmail(email);
 
     if (!user) throw new BadRequestException('User does not exist');
 
-    const passwordMatches = await argon2.verify(user.passwordHash, password);
-
-    if (!passwordMatches)
+    if (!(await argon2.verify(user.passwordHash, password)))
       throw new BadRequestException('Password is incorrect');
 
     const tokens = await this.getTokens(user.id, user.email, user.role);
@@ -51,7 +50,7 @@ export class AuthService {
     return this.usersService.updateRefreshToken(userId, null);
   }
 
-  async register({ email, password, ...rest }: CreateUserDto) {
+  async registerLocal({ email, password, ...rest }: CreateUserDto) {
     const userExists = await this.usersService.findOneByEmail(email);
 
     if (userExists) {
@@ -83,12 +82,8 @@ export class AuthService {
     if (!user || !user.refreshToken)
       throw new ForbiddenException('Access Denied');
 
-    const refreshTokenMatches = await argon2.verify(
-      user.refreshToken,
-      refreshToken,
-    );
-
-    if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
+    if (!(await argon2.verify(user.refreshToken, refreshToken)))
+      throw new ForbiddenException('Access Denied');
 
     const tokens = await this.getTokens(user.id, user.email, user.role);
 
@@ -102,40 +97,30 @@ export class AuthService {
   }
 
   private async updateRefreshToken(userId: string, refreshToken: string) {
-    const hashedRefreshToken = await this.hashData(refreshToken);
-
-    await this.usersService.updateRefreshToken(userId, hashedRefreshToken);
+    await this.usersService.updateRefreshToken(
+      userId,
+      await this.hashData(refreshToken),
+    );
   }
 
   private async getTokens(userId: string, email: string, role: Role) {
+    const newPayload: JwtPayload = {
+      sub: userId,
+      email,
+      role,
+    };
+
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          email,
-          role,
-        },
-        {
-          secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-          expiresIn: '15m',
-        },
-      ),
-      this.jwtService.signAsync(
-        {
-          sub: userId,
-          email,
-          role,
-        },
-        {
-          secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
-          expiresIn: '7d',
-        },
-      ),
+      this.jwtService.signAsync(newPayload, {
+        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
+        expiresIn: '15m',
+      }),
+      this.jwtService.signAsync(newPayload, {
+        secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
+        expiresIn: '7d',
+      }),
     ]);
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+    return { accessToken, refreshToken };
   }
 }

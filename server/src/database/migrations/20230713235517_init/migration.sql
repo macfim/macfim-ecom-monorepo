@@ -7,6 +7,7 @@ CREATE TABLE `users` (
     `firstName` VARCHAR(191) NOT NULL,
     `lastName` VARCHAR(191) NOT NULL,
     `passwordHash` VARCHAR(191) NOT NULL,
+    `refreshToken` VARCHAR(191) NULL,
     `role` ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
 
     UNIQUE INDEX `users_email_key`(`email`),

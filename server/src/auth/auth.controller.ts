@@ -1,38 +1,45 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateUserDto } from '@server/users/dto';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
-import { AccessTokenGuard, RefreshTokenGuard } from './guards';
 import type { JwtPayload } from './types';
-import { Request as ExpressRequest } from 'express';
+import { RefreshTokenGuard } from '@server/shared/guards';
+import { GetCurrentUser, Public } from '@server/shared/decorators';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('register')
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto);
+  @Public()
+  @Post('local/register')
+  registerLocal(@Body() createUserDto: CreateUserDto) {
+    return this.authService.registerLocal(createUserDto);
   }
 
-  @Post('login')
-  login(@Body() data: AuthDto) {
-    return this.authService.login(data);
+  @Public()
+  @Post('local/login')
+  loginLocal(@Body() data: AuthDto) {
+    return this.authService.loginLocal(data);
   }
 
-  @UseGuards(AccessTokenGuard)
   @Get('logout')
-  async logout(@Req() req: ExpressRequest) {
-    const user = req.user as JwtPayload;
-
-    await this.authService.logout(user['sub']);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async logout(@GetCurrentUser('sub') userId: string) {
+    await this.authService.logout(userId);
   }
 
+  @Public()
   @UseGuards(RefreshTokenGuard)
   @Get('refresh')
-  refreshTokens(@Req() req: ExpressRequest) {
-    const user = req.user as JwtPayload & { refreshToken: string };
-
+  refreshTokens(@GetCurrentUser() user: JwtPayload & { refreshToken: string }) {
     return this.authService.refreshTokens(user.sub, user.refreshToken);
   }
 }

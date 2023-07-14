@@ -6,6 +6,8 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { TrpcModule } from './trpc/trpc.module';
 import { UsersModule } from './users/users.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './shared/guards';
 
 const configValidationSchema = Joi.object({
   NODE_ENV: Joi.string()
@@ -28,6 +30,12 @@ const configValidationSchema = Joi.object({
     PrismaModule,
     AuthModule,
     UsersModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
+    },
   ],
 })
 export class AppModule {}
