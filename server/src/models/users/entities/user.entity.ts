@@ -10,8 +10,6 @@ export class UserEntity implements User {
   lastName!: string;
   @Exclude()
   passwordHash!: string;
-  @Exclude()
-  refreshToken!: string | null;
   role!: Role;
 
   constructor(user: User) {
