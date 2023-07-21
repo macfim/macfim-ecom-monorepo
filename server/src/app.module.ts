@@ -8,6 +8,7 @@ import { UsersModule } from './models/users/users.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './models/auth/auth.module';
 import { AccessTokenGuard } from './shared/guards';
+import { CacheModule } from '@nestjs/cache-manager';
 
 const configValidationSchema = Joi.object({
   NODE_ENV: Joi.string()
@@ -38,6 +39,9 @@ const configValidationSchema = Joi.object({
           },
         },
       },
+    }),
+    CacheModule.register({
+      isGlobal: true,
     }),
     PrismaModule,
     AuthModule,

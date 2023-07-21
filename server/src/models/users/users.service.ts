@@ -7,7 +7,7 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   findOneByEmail(email: User['email']) {
-    return this.prisma.user.findUnique({ where: { email } });
+    return this.prisma.user.findFirst({ where: { email } });
   }
 
   findOneById(userId: User['id']) {
@@ -16,12 +16,5 @@ export class UsersService {
 
   create(data: Prisma.UserCreateArgs['data']) {
     return this.prisma.user.create({ data });
-  }
-
-  updateRefreshToken(userId: User['id'], refreshToken: User['refreshToken']) {
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { refreshToken },
-    });
   }
 }
